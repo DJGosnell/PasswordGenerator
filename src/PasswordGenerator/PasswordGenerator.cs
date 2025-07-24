@@ -37,6 +37,7 @@ public class Generator
     public bool UppercaseFirstLetterOfOneWord { get; set; }
 
     private readonly List<string> _words;
+    private readonly StringBuilder _sb;
     private static readonly RandomNumberGenerator rng = RandomNumberGenerator.Create();
 
     /// <summary>
@@ -60,7 +61,7 @@ public class Generator
             ? new List<char>(specialCharacters)
             : new List<char>();
         UppercaseFirstLetterOfOneWord = uppercaseFirstLetterOfOneWord;
-
+        _sb = new StringBuilder();
         _words = new List<string>(maxReadLines);
     }
 
@@ -138,10 +139,10 @@ public class Generator
         }
 
         // Build password string: avoid spaces between adjacent digits
-        var sb = new StringBuilder();
+        _sb.Clear();
         if (tokens.Count > 0)
         {
-            sb.Append(tokens[0]);
+            _sb.Append(tokens[0]);
             bool prevIsDigit = tokens[0].Length == 1 && char.IsDigit(tokens[0][0]);
 
             for (int i = 1; i < tokens.Count; i++)
@@ -151,15 +152,15 @@ public class Generator
 
                 if (AllowSpacesBetweenWordsAndNumbers && !(prevIsDigit && currIsDigit))
                 {
-                    sb.Append(' ');
+                    _sb.Append(' ');
                 }
 
-                sb.Append(current);
+                _sb.Append(current);
                 prevIsDigit = currIsDigit;
             }
         }
 
-        return sb.ToString();
+        return _sb.ToString();
     }
     
     /// <summary>
@@ -191,8 +192,8 @@ public class Generator
         }
 
         // Build with separators between each word
-        var sb = new StringBuilder();
-        sb.Append(selected[0]);
+        _sb.Clear();
+        _sb.Append(selected[0]);
         for (int i = 1; i < selected.Count; i++)
         {
             string sep;
@@ -209,11 +210,11 @@ public class Generator
                     dsb.Append((char)('0' + GetRandomInt(0, 10)));
                 sep = dsb.ToString();
             }
-            sb.Append(sep);
-            sb.Append(selected[i]);
+            _sb.Append(sep);
+            _sb.Append(selected[i]);
         }
 
-        return sb.ToString();
+        return _sb.ToString();
     }
 
     /// <summary>
