@@ -84,6 +84,34 @@ public class InputHelper
         }
     }
 
+    public static bool PromptInput(string prompt, string defaultValue, out string? result)
+    {
+        result = null;
+
+        Console.Write($"{prompt} (Default: {defaultValue}, ESC to cancel): ");
+        string input = ReadLineWithEscape(out bool escaped);
+
+        if (escaped)
+            return false;
+
+        result = string.IsNullOrWhiteSpace(input) ? defaultValue : input;
+        return true;
+    }
+
+    public static bool PromptInput(string prompt, out string? result)
+    {
+        result = null;
+
+        Console.Write($"{prompt} (Press ESC to cancel): ");
+        string input = ReadLineWithEscape(out bool escaped);
+
+        if (escaped)
+            return false;
+
+        result = input;
+        return true;
+    }
+
     private static string ReadLineWithEscape(out bool escaped)
     {
         escaped = false;
